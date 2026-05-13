@@ -1,0 +1,614 @@
+/* Azure Platform Network Designer - Combined Styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f4f8;
+    color: #1e1e1e;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+header h1 {
+    font-size: 1.8rem;
+    color: #0078d4;
+}
+
+header .subtitle {
+    color: #666;
+    margin-top: 4px;
+}
+
+/* Config Section */
+#config {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.config-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.config-row:last-child {
+    margin-bottom: 0;
+}
+
+.config-row label {
+    font-weight: 600;
+    min-width: 200px;
+}
+
+.config-row input[type="text"] {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    width: 220px;
+}
+
+.config-row select {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    min-width: 300px;
+}
+
+button {
+    padding: 6px 14px;
+    border: 1px solid #0078d4;
+    background: #0078d4;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.15s;
+}
+
+button:hover {
+    background: #005ea2;
+}
+
+/* Table base */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead th {
+    background: #0078d4;
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+tbody td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.85rem;
+    vertical-align: middle;
+}
+
+tbody tr:hover {
+    background: #f0f6ff;
+}
+
+td .colour-swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: inline-block;
+    border: 1px solid #999;
+}
+
+td .subnet-name {
+    font-weight: 600;
+}
+
+td .subnet-name.unnamed {
+    color: #999;
+    font-style: italic;
+}
+
+/* Divide link */
+.divide-link {
+    color: #0078d4;
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.divide-link:hover {
+    color: #d83b01;
+}
+
+.divide-link.disabled {
+    color: #ccc;
+    cursor: not-allowed;
+    text-decoration: none;
+}
+
+/* Join tree cells */
+.join-cell {
+    padding: 0 !important;
+    width: 22px;
+    min-width: 22px;
+    max-width: 22px;
+    position: relative;
+    border-bottom: 1px solid #eee !important;
+}
+
+.join-bracket {
+    position: absolute;
+    left: 6px;
+    width: 12px;
+}
+
+.join-top {
+    top: 50%;
+    bottom: 0;
+    border-left: 3px solid #bbb;
+    border-top: 3px solid #bbb;
+    border-top-left-radius: 4px;
+}
+
+.join-mid {
+    top: 0;
+    bottom: 0;
+    border-left: 3px solid #bbb;
+}
+
+.join-bottom {
+    top: 0;
+    bottom: 50%;
+    border-left: 3px solid #bbb;
+    border-bottom: 3px solid #bbb;
+    border-bottom-left-radius: 4px;
+}
+
+.join-clickable {
+    cursor: pointer;
+    border-color: #0078d4 !important;
+}
+
+.join-clickable:hover {
+    border-color: #d83b01 !important;
+}
+
+thead th.join-header {
+    padding: 4px 1px;
+    font-size: 0.65rem;
+    text-align: center;
+    min-width: 22px;
+    max-width: 22px;
+}
+
+thead th.join-group-header {
+    text-align: center;
+    font-size: 0.75rem;
+}
+
+/* Name cell clickable */
+td.name-cell {
+    cursor: pointer;
+}
+
+td.name-cell:hover {
+    background: #e8f0fe;
+}
+
+/* Warning badges */
+.warning-badge {
+    background: #fff4ce;
+    color: #8a6914;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.error-badge {
+    background: #fde7e9;
+    color: #a80000;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Summary */
+#summary {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+#summaryContent {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+}
+
+#summaryContent .stat {
+    display: flex;
+    flex-direction: column;
+}
+
+#summaryContent .stat-label {
+    font-weight: 600;
+    color: #666;
+    font-size: 0.8rem;
+}
+
+#summaryContent .stat-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0078d4;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #fff;
+    border-radius: 8px;
+    padding: 24px;
+    min-width: 360px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.modal-content h3 {
+    margin-bottom: 16px;
+    color: #0078d4;
+}
+
+.modal-content label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.modal-content input[type="text"] {
+    display: block;
+    width: 100%;
+    margin-top: 4px;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    justify-content: flex-end;
+}
+
+.modal-actions button:last-child {
+    background: #999;
+    border-color: #999;
+}
+
+/* Help Section */
+#helpSection {
+    margin-top: 24px;
+}
+
+#helpSection details {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#helpSection summary {
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    color: #0078d4;
+    background: #f9f9f9;
+    border-bottom: 1px solid #eee;
+}
+
+#helpSection summary:hover {
+    background: #eef5fd;
+}
+
+.help-content {
+    padding: 16px 20px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.help-content h3 {
+    color: #0078d4;
+    margin: 16px 0 8px 0;
+    font-size: 1rem;
+}
+
+.help-content h3:first-child {
+    margin-top: 0;
+}
+
+.help-content ol {
+    margin: 8px 0 12px 20px;
+}
+
+.help-content li {
+    margin-bottom: 4px;
+}
+
+.help-content code {
+    background: #f0f0f0;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 0.88rem;
+}
+
+.help-content a {
+    color: #0078d4;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    color: #888;
+    font-size: 0.82rem;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+footer a {
+    color: #0078d4;
+}
+
+footer p {
+    margin-bottom: 4px;
+}
+
+/* Toast notification */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #0078d4;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    z-index: 2000;
+    animation: fadeInOut 2.5s forwards;
+}
+
+@keyframes fadeInOut {
+    0%   { opacity: 0; transform: translateY(10px); }
+    15%  { opacity: 1; transform: translateY(0); }
+    80%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Overlap warnings */
+.overlap-box {
+    background: #fff4ce;
+    border: 1px solid #e8c700;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+    color: #6b5800;
+}
+
+.overlap-box ul {
+    margin: 6px 0 0 20px;
+}
+
+/* Platform overview bar */
+#platformOverview {
+    margin-bottom: 20px;
+}
+
+#platformBar {
+    display: flex;
+    width: 100%;
+    min-height: 50px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 2px solid #333;
+    gap: 2px;
+    background: #333;
+}
+
+.platform-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #1e1e1e;
+    text-align: center;
+    padding: 0 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: filter 0.15s;
+}
+
+.platform-block:hover {
+    filter: brightness(0.85);
+}
+
+.platform-free {
+    background: repeating-linear-gradient(
+        45deg,
+        #e0e0e0,
+        #e0e0e0 4px,
+        #f5f5f5 4px,
+        #f5f5f5 8px
+    ) !important;
+    color: #888;
+    font-size: 0.65rem;
+    cursor: default;
+}
+.platform-free:hover {
+    filter: none;
+}
+
+.empty-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    color: #999;
+    font-style: italic;
+    font-size: 0.9rem;
+    background: #f0f0f0;
+}
+
+/* Platform table */
+#platformTable {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+/* Expand arrow */
+.expand-col {
+    width: 30px;
+    min-width: 30px;
+    max-width: 30px;
+    text-align: center;
+}
+
+.expand-arrow {
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #0078d4;
+    user-select: none;
+}
+
+.expand-arrow:hover {
+    color: #d83b01;
+}
+
+/* VNet rows */
+.vnet-row {
+    background: #e8f4fd;
+    font-weight: 600;
+}
+
+.vnet-row td {
+    border-bottom: 2px solid #0078d4 !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+}
+
+.vnet-name-cell {
+    color: #0078d4;
+    font-size: 0.95rem;
+}
+
+/* Utilisation bar */
+.util-cell {
+    padding: 4px 8px !important;
+    min-width: 140px;
+}
+
+.util-bar {
+    display: flex;
+    width: 100%;
+    height: 14px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: #eee;
+    border: 1px solid #ccc;
+}
+
+.util-seg {
+    height: 100%;
+    min-width: 0;
+    transition: width 0.2s;
+}
+
+.util-named {
+    opacity: 0.9;
+}
+
+.util-free {
+    background: repeating-linear-gradient(
+        -45deg,
+        #e8e8e8,
+        #e8e8e8 3px,
+        #f5f5f5 3px,
+        #f5f5f5 6px
+    );
+}
+
+.util-label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: #666;
+    margin-top: 2px;
+    text-align: center;
+}
+
+.vnet-row .util-label {
+    font-weight: 600;
+    color: #333;
+}
+
+/* Subnet rows */
+.subnet-row td {
+    background: #fff;
+}
+
+.subnet-indent {
+    border-left: 3px solid #ddd;
+}
+
+.subnet-row:hover td {
+    background: #f6faff;
+}

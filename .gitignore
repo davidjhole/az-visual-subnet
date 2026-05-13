@@ -1,0 +1,7 @@
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+
+# Azure export files may contain real subscription IDs / resource names
+azure-platform-export*.json

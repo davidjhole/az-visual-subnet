@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clipboard Diagnostic Test</title>
+    <style>
+        body { font-family: Calibri, Arial, sans-serif; padding: 20px; max-width: 900px; margin: 0 auto; }
+        .test-section { border: 1px solid #ccc; padding: 16px; margin: 12px 0; border-radius: 6px; }
+        .test-section h3 { margin-top: 0; }
+        button { padding: 8px 16px; margin: 4px; cursor: pointer; font-size: 14px; }
+        .pass { color: green; font-weight: bold; }
+        .fail { color: red; font-weight: bold; }
+        .info { color: #0078d4; }
+        #log { background: #f5f5f5; padding: 12px; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 400px; overflow-y: auto; border: 1px solid #ddd; }
+        #pasteTarget { border: 2px dashed #ccc; padding: 20px; margin-top: 12px; min-height: 100px; }
+        #pasteTarget:focus { border-color: #0078d4; outline: none; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Clipboard Diagnostic Test</h1>
+    <p>This page tests the exact same clipboard technique used by "Copy for Word". Open this file in the browser where copy is broken.</p>
+
+    <div class="test-section">
+        <h3>Test 1: Basic execCommand('copy') with a simple HTML table</h3>
+        <button onclick="testBasicCopy()">Run Test 1</button>
+        <p><small>Copies a simple styled HTML table using the hidden div + execCommand technique.</small></p>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 2: Check clipboard contents after copy</h3>
+        <button onclick="testClipboardRead()">Run Test 2</button>
+        <p><small>After running Test 1, this reads back what's on the clipboard and checks for text/html format.</small></p>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 3: Copy event listener diagnostic</h3>
+        <button onclick="testCopyEvent()">Run Test 3</button>
+        <p><small>Checks if a copy event fires and what formats are available on it.</small></p>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 4: Paste here to inspect</h3>
+        <p>After running Test 1, click inside the box below and press Ctrl+V. The diagnostic will show what formats were received.</p>
+        <div id="pasteTarget" contenteditable="true" onpaste="inspectPaste(event)">Click here, then Ctrl+V to paste...</div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 5: Visible selection copy (sanity check)</h3>
+        <p>The table below is visible on-page. Select it manually with your mouse, press Ctrl+C, then paste into Word. If THIS works but the programmatic copy doesn't, the issue is with the hidden div technique.</p>
+        <div id="visibleTable" style="border:1px solid #999;padding:8px;display:inline-block;">
+            <table style="font-family:Calibri,Arial,sans-serif;font-size:10pt;border-collapse:collapse;">
+                <tr>
+                    <th style="background:#0078d4;color:#fff;padding:6px 10px;border:1px solid #005a9e;">Name</th>
+                    <th style="background:#0078d4;color:#fff;padding:6px 10px;border:1px solid #005a9e;">CIDR</th>
+                    <th style="background:#0078d4;color:#fff;padding:6px 10px;border:1px solid #005a9e;">Total IPs</th>
+                </tr>
+                <tr>
+                    <td style="padding:5px 10px;border:1px solid #ccc;">GatewaySubnet</td>
+                    <td style="padding:5px 10px;border:1px solid #ccc;">10.0.1.0/27</td>
+                    <td style="padding:5px 10px;border:1px solid #ccc;">32</td>
+                </tr>
+                <tr>
+                    <td style="padding:5px 10px;border:1px solid #ccc;">AzureFirewallSubnet</td>
+                    <td style="padding:5px 10px;border:1px solid #ccc;">10.0.2.0/26</td>
+                    <td style="padding:5px 10px;border:1px solid #ccc;">64</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <h3>Diagnostic Log</h3>
+    <div id="log"></div>
+
+    <script>
+        function log(msg, cls) {
+            var el = document.getElementById('log');
+            var span = document.createElement('span');
+            if (cls) span.className = cls;
+            span.textContent = new Date().toLocaleTimeString() + '  ' + msg + '\n';
+            el.appendChild(span);
+            el.scrollTop = el.scrollHeight;
+        }
+
+        function testBasicCopy() {
+            log('--- TEST 1: Basic execCommand copy ---');
+
+            var html = '<table style="font-family:Calibri,Arial,sans-serif;font-size:10pt;border-collapse:collapse;">';
+            html += '<tr><th style="background:#0078d4;color:#fff;padding:6px 10px;border:1px solid #005a9e;">Name</th>';
+            html += '<th style="background:#0078d4;color:#fff;padding:6px 10px;border:1px solid #005a9e;">CIDR</th>';
+            html += '<th style="background:#0078d4;color:#fff;padding:6px 10px;border:1px solid #005a9e;">Total IPs</th></tr>';
+            html += '<tr><td style="padding:5px 10px;border:1px solid #ccc;">GatewaySubnet</td>';
+            html += '<td style="padding:5px 10px;border:1px solid #ccc;">10.0.1.0/27</td>';
+            html += '<td style="padding:5px 10px;border:1px solid #ccc;">32</td></tr>';
+            html += '<tr><td style="padding:5px 10px;border:1px solid #ccc;">AzureFirewallSubnet</td>';
+            html += '<td style="padding:5px 10px;border:1px solid #ccc;">10.0.2.0/26</td>';
+            html += '<td style="padding:5px 10px;border:1px solid #ccc;">64</td></tr>';
+            html += '</table>';
+
+            log('HTML length: ' + html.length + ' chars');
+
+            // Create hidden container — exact same technique as copyHTML()
+            var container = document.createElement('div');
+            container.innerHTML = html;
+            container.style.position = 'fixed';
+            container.style.left = '-9999px';
+            container.style.top = '0';
+            container.style.opacity = '0';
+            document.body.appendChild(container);
+
+            log('Container created, childNodes: ' + container.childNodes.length);
+            log('Container innerHTML starts with: ' + container.innerHTML.substring(0, 80) + '...');
+
+            var range = document.createRange();
+            range.selectNodeContents(container);
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+
+            log('Selection set. rangeCount: ' + sel.rangeCount);
+            log('Selection toString length: ' + sel.toString().length);
+            log('Selection text preview: "' + sel.toString().substring(0, 100) + '"');
+
+            var result;
+            try {
+                result = document.execCommand('copy');
+                log('execCommand("copy") returned: ' + result, result ? 'pass' : 'fail');
+            } catch (e) {
+                log('execCommand("copy") threw: ' + e.message, 'fail');
+            }
+
+            sel.removeAllRanges();
+            document.body.removeChild(container);
+
+            log('Container cleaned up.');
+            log('NOW: Paste into Word (Ctrl+V) to test if it arrives as a formatted table.');
+            log('Also run Test 2 to check clipboard contents, or paste in the box in Test 4.');
+            log('');
+        }
+
+        function testClipboardRead() {
+            log('--- TEST 2: Reading clipboard contents ---');
+
+            if (!navigator.clipboard) {
+                log('navigator.clipboard is NOT available (likely file:// protocol)', 'fail');
+                log('Try opening this page via http://localhost instead', 'info');
+                return;
+            }
+
+            if (!navigator.clipboard.read) {
+                log('navigator.clipboard.read() is not available', 'fail');
+                log('Trying navigator.clipboard.readText() instead...', 'info');
+                navigator.clipboard.readText().then(function(text) {
+                    log('clipboard.readText() returned: ' + text.length + ' chars');
+                    log('Text preview: "' + text.substring(0, 200) + '"');
+                }).catch(function(err) {
+                    log('clipboard.readText() failed: ' + err.message, 'fail');
+                });
+                return;
+            }
+
+            navigator.clipboard.read().then(function(items) {
+                log('clipboard.read() returned ' + items.length + ' ClipboardItem(s)');
+                items.forEach(function(item, i) {
+                    log('  Item ' + i + ' types: ' + item.types.join(', '), 'info');
+                    item.types.forEach(function(type) {
+                        item.getType(type).then(function(blob) {
+                            blob.text().then(function(text) {
+                                if (type === 'text/html') {
+                                    log('  HTML content (' + text.length + ' chars): ' + text.substring(0, 300) + '...', 'pass');
+                                } else {
+                                    log('  ' + type + ' (' + text.length + ' chars): ' + text.substring(0, 200));
+                                }
+                            });
+                        });
+                    });
+                });
+            }).catch(function(err) {
+                log('clipboard.read() failed: ' + err.message, 'fail');
+                log('This may require HTTPS or user gesture. Try clipboard.readText()...', 'info');
+                navigator.clipboard.readText().then(function(text) {
+                    log('Fallback readText: ' + text.length + ' chars');
+                    log('Text: "' + text.substring(0, 200) + '"');
+                }).catch(function(e2) {
+                    log('readText also failed: ' + e2.message, 'fail');
+                });
+            });
+            log('');
+        }
+
+        function testCopyEvent() {
+            log('--- TEST 3: Copy event listener ---');
+
+            var html = '<table style="border-collapse:collapse;"><tr><td style="border:1px solid #ccc;padding:5px;">Test Cell</td></tr></table>';
+            var container = document.createElement('div');
+            container.innerHTML = html;
+            container.style.position = 'fixed';
+            container.style.left = '-9999px';
+            container.style.top = '0';
+            container.style.opacity = '0';
+            document.body.appendChild(container);
+
+            var range = document.createRange();
+            range.selectNodeContents(container);
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+
+            // Listen for the copy event
+            var copyFired = false;
+            function onCopy(e) {
+                copyFired = true;
+                log('Copy event fired!', 'pass');
+                log('  clipboardData available: ' + !!e.clipboardData, e.clipboardData ? 'pass' : 'fail');
+                if (e.clipboardData) {
+                    // Try to read what's being put on clipboard
+                    // Note: getData may not work in all browsers during copy
+                    var types = e.clipboardData.types || [];
+                    log('  clipboardData.types: ' + (types.length > 0 ? types.join(', ') : '(empty — normal for copy event)'));
+                }
+                // Check if anything is intercepting/preventing
+                log('  event.defaultPrevented: ' + e.defaultPrevented, e.defaultPrevented ? 'fail' : 'pass');
+            }
+            document.addEventListener('copy', onCopy, true); // capture phase
+
+            var result = document.execCommand('copy');
+            
+            document.removeEventListener('copy', onCopy, true);
+            sel.removeAllRanges();
+            document.body.removeChild(container);
+
+            log('execCommand returned: ' + result, result ? 'pass' : 'fail');
+            if (!copyFired) {
+                log('Copy event did NOT fire — this is very unusual', 'fail');
+            }
+            log('');
+        }
+
+        function inspectPaste(e) {
+            log('--- TEST 4: Paste event inspection ---');
+            
+            var cd = e.clipboardData;
+            if (!cd) {
+                log('No clipboardData on paste event!', 'fail');
+                return;
+            }
+
+            var types = cd.types;
+            log('Paste clipboardData.types: ' + Array.from(types).join(', '), 'info');
+
+            for (var i = 0; i < types.length; i++) {
+                var type = types[i];
+                var data = cd.getData(type);
+                if (type === 'text/html') {
+                    log('text/html (' + data.length + ' chars):', 'pass');
+                    log('  Preview: ' + data.substring(0, 500));
+                    // Check if it contains table tags
+                    if (data.indexOf('<table') >= 0) {
+                        log('  ✓ Contains <table> — Word should render as table', 'pass');
+                    } else {
+                        log('  ✗ No <table> found in HTML!', 'fail');
+                    }
+                } else if (type === 'text/plain') {
+                    log('text/plain (' + data.length + ' chars):', 'info');
+                    log('  Preview: "' + data.substring(0, 200) + '"');
+                } else {
+                    log(type + ' (' + data.length + ' chars)', 'info');
+                }
+            }
+            log('');
+
+            // Don't prevent default — let the paste happen so you can see the result
+        }
+
+        log('Clipboard diagnostic loaded. Protocol: ' + window.location.protocol);
+        log('User agent: ' + navigator.userAgent.substring(0, 120));
+        log('');
+        log('Run tests in order: Test 1 first, then Test 2 or paste in Test 4.');
+        log('Also try Test 5 (manual copy/paste) as a sanity check.');
+        log('');
+    </script>
+</body>
+</html>
