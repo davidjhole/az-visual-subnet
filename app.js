@@ -84,8 +84,35 @@ const platform = (function () {
     function setAddressSpace(value) {
         var v = value.trim();
         if (v && !validateCidr(v)) { showToast('Invalid address space CIDR'); return; }
+
+        var oldCidr = addressSpace;
         addressSpace = v;
         document.getElementById('addressSpaceInput').value = addressSpace;
+
+        // Rebase VNets when both old and new address spaces are valid and there are VNets to update
+        if (oldCidr && v && vnets.length > 0) {
+            var oldBase = parseCidr(oldCidr);
+            var newBase = parseCidr(v);
+            pushUndo();
+            vnets = vnets.map(function (vnet) {
+                var vp = parseCidr(vnet.cidr);
+                var offset = vp.network - oldBase.network; // signed JS number
+                var newVnetNetworkNum = newBase.network + offset;
+                if (newVnetNetworkNum < 0 || newVnetNetworkNum > 0xFFFFFFFF) return vnet;
+                var newVnetNetwork = newVnetNetworkNum >>> 0;
+                var newVnetBroadcast = (newVnetNetwork + vp.totalIPs - 1) >>> 0;
+                if (newVnetNetwork < newBase.network || newVnetBroadcast > newBase.broadcast) return vnet;
+                var newVnetCidr = longToIp(newVnetNetwork) + '/' + vp.prefix;
+                var newSubnets = vnet.subnets.map(function (s) {
+                    var sp = parseCidr(s.cidr);
+                    var subOffset = sp.network - vp.network;
+                    var newSubNetwork = (newVnetNetwork + subOffset) >>> 0;
+                    return { cidr: longToIp(newSubNetwork) + '/' + sp.prefix, name: s.name, colour: s.colour };
+                });
+                return Object.assign({}, vnet, { cidr: newVnetCidr, subnets: newSubnets });
+            });
+        }
+
         render();
     }
 
@@ -108,7 +135,6 @@ const platform = (function () {
         document.getElementById('modalVnetName').value = '';
         document.getElementById('modalVnetCidr').value = '';
         document.getElementById('modalVnetRegion').value = '';
-        document.getElementById('modalVnetSubscription').value = '';
         document.getElementById('vnetModal').style.display = 'flex';
         document.getElementById('modalVnetName').focus();
     }
@@ -119,7 +145,6 @@ const platform = (function () {
         document.getElementById('modalVnetName').value = vnets[vIdx].name;
         document.getElementById('modalVnetCidr').value = vnets[vIdx].cidr;
         document.getElementById('modalVnetRegion').value = vnets[vIdx].region || '';
-        document.getElementById('modalVnetSubscription').value = vnets[vIdx].subscriptionName || '';
         document.getElementById('vnetModal').style.display = 'flex';
         document.getElementById('modalVnetName').focus();
     }
@@ -128,7 +153,6 @@ const platform = (function () {
         var name = document.getElementById('modalVnetName').value.trim();
         var cidr = document.getElementById('modalVnetCidr').value.trim();
         var region = document.getElementById('modalVnetRegion').value.trim();
-        var sub = document.getElementById('modalVnetSubscription').value.trim();
 
         if (!name) { showToast("VNet name is required"); return; }
         if (!validateCidr(cidr)) { showToast("Invalid CIDR"); return; }
@@ -140,7 +164,6 @@ const platform = (function () {
                 name: name,
                 cidr: cidr,
                 region: region,
-                subscriptionName: sub,
                 colour: nextVnetColour(),
                 expanded: true,
                 subnets: [{ cidr: cidr, name: '', colour: nextSubnetColour() }]
@@ -151,7 +174,6 @@ const platform = (function () {
             var oldCidr = vnets[idx].cidr;
             vnets[idx].name = name;
             vnets[idx].region = region;
-            vnets[idx].subscriptionName = sub;
             if (cidr !== oldCidr) {
                 var oldRange = parseCidr(oldCidr);
                 var newRange = parseCidr(cidr);
@@ -478,7 +500,7 @@ const platform = (function () {
 
     function copyMarkdown() {
         if (vnets.length === 0) { showToast("No VNets"); return; }
-        var md = '# Azure Network Design\n\n';
+        var md = '# AZ Network Design\n\n';
         md += '**Exported:** ' + new Date().toLocaleString() + '\n\n';
         if (addressSpace) {
             var asp = parseCidr(addressSpace);
@@ -519,7 +541,7 @@ const platform = (function () {
         var tdStyle = 'padding:5px 10px;border:1px solid #ccc;font-size:10pt;';
         var vnetStyle = 'padding:6px 10px;border:1px solid #0078d4;font-size:10pt;font-weight:bold;background:#e8f4fd;';
 
-        var html = '<h1 style="font-family:Calibri,Arial,sans-serif;color:#0078d4;">Azure Network Design</h1>';
+        var html = '<h1 style="font-family:Calibri,Arial,sans-serif;color:#0078d4;">AZ Network Design</h1>';
         html += '<p style="font-family:Calibri,Arial,sans-serif;font-size:10pt;color:#666;">Exported: ' + new Date().toLocaleString() + '</p>';
         if (addressSpace) {
             var asp = parseCidr(addressSpace);
@@ -786,9 +808,125 @@ const platform = (function () {
         return { joinColumns: joinColumns, cellMap: cellMap };
     }
 
+    // --- Example Data ---
+    function loadExample() {
+        pushUndo();
+        var example = {
+            addressSpace: '10.0.0.0/8',
+            vnets: [
+                {
+                    name: 'vnet-connectivity-uksouth',
+                    cidr: '10.0.0.0/22',
+                    region: 'uksouth',
+                    subscriptionName: 'Connectivity',
+                    subnets: [
+                        { name: 'AzureFirewallSubnet',          cidr: '10.0.0.0/26'  },
+                        { name: 'AzureFirewallManagementSubnet',cidr: '10.0.0.64/26' },
+                        { name: 'GatewaySubnet',                cidr: '10.0.0.128/27' },
+                        { name: 'AzureBastionSubnet',           cidr: '10.0.0.160/26' },
+                        { name: 'snet-dns-resolver-inbound',    cidr: '10.0.0.224/28' },
+                        { name: 'snet-dns-resolver-outbound',   cidr: '10.0.0.240/28' },
+                        { name: 'snet-network-management',      cidr: '10.0.1.0/24'  },
+                        { name: 'snet-private-endpoints',       cidr: '10.0.2.0/24'  }
+                    ]
+                },
+                {
+                    name: 'vnet-identity-uksouth',
+                    cidr: '10.1.0.0/24',
+                    region: 'uksouth',
+                    subscriptionName: 'Identity',
+                    subnets: [
+                        { name: 'snet-domain-controllers', cidr: '10.1.0.0/27' },
+                        { name: 'snet-private-endpoints',  cidr: '10.1.0.32/27' }
+                    ]
+                },
+                {
+                    name: 'vnet-management-uksouth',
+                    cidr: '10.2.0.0/24',
+                    region: 'uksouth',
+                    subscriptionName: 'Management',
+                    subnets: [
+                        { name: 'snet-monitoring',         cidr: '10.2.0.0/26'  },
+                        { name: 'snet-automation',         cidr: '10.2.0.64/26' },
+                        { name: 'snet-private-endpoints',  cidr: '10.2.0.128/26' }
+                    ]
+                },
+                {
+                    name: 'vnet-alz-corp-01-uksouth',
+                    cidr: '10.10.0.0/22',
+                    region: 'uksouth',
+                    subscriptionName: 'Corp Landing Zone 01',
+                    subnets: [
+                        { name: 'snet-app-frontend',      cidr: '10.10.0.0/25'  },
+                        { name: 'snet-app-backend',       cidr: '10.10.0.128/25' },
+                        { name: 'snet-data',              cidr: '10.10.1.0/25'  },
+                        { name: 'snet-private-endpoints', cidr: '10.10.1.128/25' }
+                    ]
+                },
+                {
+                    name: 'vnet-alz-corp-02-uksouth',
+                    cidr: '10.10.4.0/22',
+                    region: 'uksouth',
+                    subscriptionName: 'Corp Landing Zone 02',
+                    subnets: [
+                        { name: 'snet-app-frontend',      cidr: '10.10.4.0/25'  },
+                        { name: 'snet-app-backend',       cidr: '10.10.4.128/25' },
+                        { name: 'snet-private-endpoints', cidr: '10.10.5.0/24'  }
+                    ]
+                },
+                {
+                    name: 'vnet-alz-online-01-uksouth',
+                    cidr: '10.20.0.0/22',
+                    region: 'uksouth',
+                    subscriptionName: 'Online Landing Zone 01',
+                    subnets: [
+                        { name: 'snet-app-gateway',        cidr: '10.20.0.0/25'  },
+                        { name: 'snet-app-services',       cidr: '10.20.0.128/25' },
+                        { name: 'snet-private-endpoints',  cidr: '10.20.1.0/25'  }
+                    ]
+                }
+            ]
+        };
+
+        addressSpace = example.addressSpace;
+        document.getElementById('addressSpaceInput').value = addressSpace;
+        vnets.length = 0;
+        example.vnets.forEach(function (v) {
+            v.colour = nextVnetColour();
+            v.expanded = false;
+            v.additionalCidrs = [];
+            v.subnets.forEach(function (s) { s.colour = nextSubnetColour(); });
+            v.subnets = fillGaps(v.cidr, v.subnets);
+            vnets.push(v);
+        });
+        render();
+        showToast('Example platform loaded');
+    }
+
     function renderTable() {
         var tbody = document.getElementById('platformTableBody');
         tbody.innerHTML = '';
+
+        if (vnets.length === 0) {
+            var colspan = 10;
+            var emptyRow = document.createElement('tr');
+            var emptyTd = document.createElement('td');
+            emptyTd.setAttribute('colspan', colspan);
+            emptyTd.className = 'empty-state-cell';
+            emptyTd.innerHTML =
+                '<div class="empty-state">' +
+                    '<p class="empty-state-title">No VNets</p>' +
+                    '<p class="empty-state-hint">Get started by adding a VNet, importing a JSON file, or loading an example platform.</p>' +
+                    '<div class="empty-state-actions">' +
+                        '<button class="empty-btn primary" onclick="platform.addVnet()">&#x2795; Add VNet</button>' +
+                        '<button class="empty-btn" onclick="platform.importJSON()">&#x1F4E5; Import JSON</button>' +
+                        '<button class="empty-btn" onclick="platform.loadExample()">&#x1F9EA; Load Example</button>' +
+                    '</div>' +
+                '</div>';
+            emptyRow.appendChild(emptyTd);
+            tbody.appendChild(emptyRow);
+            return;
+        }
 
         vnets.forEach(function (vnet, vIdx) {
             // VNet header row
@@ -1019,7 +1157,7 @@ const platform = (function () {
     function renderSummary() {
         var content = document.getElementById('summaryContent');
         if (vnets.length === 0 && !addressSpace) {
-            content.innerHTML = '<div class="stat"><span class="stat-label">No VNets</span><span class="stat-value">Add a VNet or import from Azure</span></div>';
+            content.innerHTML = '';
             return;
         }
 
@@ -1127,6 +1265,7 @@ const platform = (function () {
         copyMarkdown: copyMarkdown,
         copyHTML: copyHTML,
         resetAll: resetAll,
-        undo: undo
+        undo: undo,
+        loadExample: loadExample
     };
 })();

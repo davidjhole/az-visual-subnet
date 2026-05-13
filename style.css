@@ -1,4 +1,4 @@
-/* Azure Platform Network Designer - Combined Styles */
+/* AZ Network Designer - Combined Styles */
 
 * {
     margin: 0;
@@ -503,6 +503,67 @@ footer p {
     font-style: italic;
     font-size: 0.9rem;
     background: #f0f0f0;
+}
+
+/* Empty state inside the table */
+.empty-state-cell {
+    padding: 0 !important;
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    text-align: center;
+}
+
+.empty-state-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0 0 8px;
+}
+
+.empty-state-hint {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0 0 24px;
+    max-width: 400px;
+}
+
+.empty-state-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.empty-btn {
+    padding: 10px 20px;
+    border: 2px solid #0078d4;
+    border-radius: 6px;
+    background: #fff;
+    color: #0078d4;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.empty-btn:hover {
+    background: #e6f3fb;
+}
+
+.empty-btn.primary {
+    background: #0078d4;
+    color: #fff;
+}
+
+.empty-btn.primary:hover {
+    background: #005a9e;
+    border-color: #005a9e;
 }
 
 /* Platform table */
