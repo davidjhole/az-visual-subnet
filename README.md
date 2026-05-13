@@ -42,7 +42,14 @@ No build step, no dependencies, no server required.
 
 ## Import from Azure
 
-Use the included PowerShell script to export your real Azure VNets and subnets into the tool's JSON format:
+Use the included PowerShell script to export your real Azure VNets and subnets into the tool's JSON format.
+
+**Download the script**
+
+- If you cloned the repo, the script is already at `export-azure.ps1` in the root.
+- If you're using the live site, click the **export-azure.ps1** download link in the Help & Troubleshooting section at the bottom of the page.
+
+**Run the script**
 
 ```powershell
 # Requires Azure CLI (az login) or Az PowerShell module
