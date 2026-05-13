@@ -63,7 +63,14 @@ Then use the **Import JSON** button in the tool to load the exported file.
 
 The **Copy for Word** button copies a rich-formatted HTML table that pastes with full styling (coloured headers, styled cells, utilisation data) into Microsoft Word.
 
-> **Note:** If pasting into Word produces plain text, see [COPYHTML-REFERENCE.md](COPYHTML-REFERENCE.md) for browser compatibility notes.
+If the table pastes as plain text instead of a formatted table, check your Word paste settings:
+
+1. In Word, go to **File → Options → Advanced**
+2. Scroll down to **"Cut, copy, and paste"**
+3. Set **"Pasting from other programs"** to **"Keep Source Formatting"** or **"Merge Formatting"**
+4. Click OK and try pasting again
+
+**Quick fix:** Right-click where you want to paste and choose the _"Keep Source Formatting"_ paste option (clipboard icon with paintbrush), or use **Paste Special → HTML Format**.
 
 ## Tech Stack
 
