@@ -1,5 +1,133 @@
 /* AZ Network Designer - Combined Styles */
 
+:root {
+    --bg-page: #f4f4f8;
+    --bg-card: #fff;
+    --bg-card-alt: #f9f9f9;
+    --bg-table-head: #0078d4;
+    --bg-vnet-row: #e8f4fd;
+    --bg-hover-row: #f0f6ff;
+    --bg-name-hover: #e8f0fe;
+    --bg-empty-bar: #f0f0f0;
+    --bg-code: #f0f0f0;
+    --bg-empty-btn: #fff;
+    --color-text: #1e1e1e;
+    --color-text-muted: #666;
+    --color-text-footer: #888;
+    --color-border: #ddd;
+    --color-border-light: #eee;
+    --color-input-border: #ccc;
+    --color-accent: #0078d4;
+    --color-vnet-name: #0078d4;
+    --color-subtitle: #666;
+    --color-util-bar-bg: #eee;
+    --color-util-bar-border: #ccc;
+    --color-util-label: #666;
+    --color-util-label-vnet: #333;
+    --color-join: #bbb;
+    --color-empty-state-title: #333;
+    --color-empty-state-hint: #666;
+    --color-subnet-indent: #ddd;
+    --color-summary-bg: #fff;
+    --color-rebase-bg: #fff8e1;
+    --color-rebase-border: #f0c040;
+    --color-rebase-text: #8a6000;
+    --color-overlap-bg: #fff4ce;
+    --color-overlap-border: #e8c700;
+    --color-overlap-text: #6b5800;
+    --color-help-summary-bg: #f9f9f9;
+    --color-help-summary-hover: #eef5fd;
+    --shadow-modal: rgba(0,0,0,0.2);
+}
+
+[data-theme="dark"] {
+    --bg-page: #1a1a2e;
+    --bg-card: #16213e;
+    --bg-card-alt: #0f172a;
+    --bg-table-head: #005a9e;
+    --bg-vnet-row: #1a2d45;
+    --bg-hover-row: #1e3a5f;
+    --bg-name-hover: #1e2f50;
+    --bg-empty-bar: #1e2535;
+    --bg-code: #0f172a;
+    --bg-empty-btn: #16213e;
+    --color-text: #e2e8f0;
+    --color-text-muted: #94a3b8;
+    --color-text-footer: #64748b;
+    --color-border: #2d3748;
+    --color-border-light: #253047;
+    --color-input-border: #4a5568;
+    --color-accent: #38bdf8;
+    --color-vnet-name: #38bdf8;
+    --color-subtitle: #94a3b8;
+    --color-util-bar-bg: #253047;
+    --color-util-bar-border: #4a5568;
+    --color-util-label: #94a3b8;
+    --color-util-label-vnet: #cbd5e1;
+    --color-join: #4a5568;
+    --color-empty-state-title: #e2e8f0;
+    --color-empty-state-hint: #94a3b8;
+    --color-subnet-indent: #2d3748;
+    --color-summary-bg: #16213e;
+    --color-rebase-bg: #2d2000;
+    --color-rebase-border: #b38a00;
+    --color-rebase-text: #fcd34d;
+    --color-overlap-bg: #2d2000;
+    --color-overlap-border: #b38a00;
+    --color-overlap-text: #fcd34d;
+    --color-help-summary-bg: #0f172a;
+    --color-help-summary-hover: #1a2d45;
+    --shadow-modal: rgba(0,0,0,0.6);
+}
+
+/* Dark mode toggle */
+.theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    user-select: none;
+    cursor: pointer;
+}
+
+.theme-toggle input[type="checkbox"] {
+    display: none;
+}
+
+.theme-toggle-track {
+    width: 42px;
+    height: 22px;
+    background: #4a5568;
+    border-radius: 11px;
+    position: relative;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+
+.theme-toggle input:checked + .theme-toggle-track {
+    background: var(--color-accent);
+}
+
+.theme-toggle-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.2s;
+}
+
+.theme-toggle input:checked + .theme-toggle-track .theme-toggle-thumb {
+    transform: translateX(20px);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -8,11 +136,12 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f4f4f8;
-    color: #1e1e1e;
+    background: var(--bg-page);
+    color: var(--color-text);
     max-width: 1400px;
     margin: 0 auto;
     padding: 20px;
+    position: relative;
 }
 
 header {
@@ -22,18 +151,18 @@ header {
 
 header h1 {
     font-size: 1.8rem;
-    color: #0078d4;
+    color: var(--color-accent);
 }
 
 header .subtitle {
-    color: #666;
+    color: var(--color-subtitle);
     margin-top: 4px;
 }
 
 /* Config Section */
 #config {
-    background: #fff;
-    border: 1px solid #ddd;
+    background: var(--bg-card);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 20px;
@@ -54,9 +183,9 @@ header .subtitle {
 .rebase-hint {
     font-size: 0.82rem;
     font-weight: 600;
-    color: #8a6000;
-    background: #fff8e1;
-    border: 1px solid #f0c040;
+    color: var(--color-rebase-text);
+    background: var(--color-rebase-bg);
+    border: 1px solid var(--color-rebase-border);
     border-radius: 4px;
     padding: 3px 10px;
     white-space: nowrap;
@@ -73,24 +202,28 @@ header .subtitle {
 
 .config-row input[type="text"] {
     padding: 6px 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-input-border);
     border-radius: 4px;
     font-size: 0.95rem;
     width: 220px;
+    background: var(--bg-card);
+    color: var(--color-text);
 }
 
 .config-row select {
     padding: 6px 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-input-border);
     border-radius: 4px;
     font-size: 0.95rem;
     min-width: 300px;
+    background: var(--bg-card);
+    color: var(--color-text);
 }
 
 button {
     padding: 6px 14px;
-    border: 1px solid #0078d4;
-    background: #0078d4;
+    border: 1px solid var(--color-accent);
+    background: var(--color-accent);
     color: #fff;
     border-radius: 4px;
     cursor: pointer;
@@ -109,7 +242,7 @@ table {
 }
 
 thead th {
-    background: #0078d4;
+    background: var(--bg-table-head);
     color: #fff;
     padding: 10px 12px;
     text-align: left;
@@ -119,13 +252,13 @@ thead th {
 
 tbody td {
     padding: 8px 12px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--color-border-light);
     font-size: 0.85rem;
     vertical-align: middle;
 }
 
 tbody tr:hover {
-    background: #f0f6ff;
+    background: var(--bg-hover-row);
 }
 
 td .colour-swatch {
@@ -147,7 +280,7 @@ td .subnet-name.unnamed {
 
 /* Divide link */
 .divide-link {
-    color: #0078d4;
+    color: var(--color-accent);
     text-decoration: underline;
     cursor: pointer;
     font-weight: 600;
@@ -162,7 +295,7 @@ td .subnet-name.unnamed {
 }
 
 .divide-link.disabled {
-    color: #ccc;
+    color: var(--color-input-border);
     cursor: not-allowed;
     text-decoration: none;
 }
@@ -174,7 +307,7 @@ td .subnet-name.unnamed {
     min-width: 22px;
     max-width: 22px;
     position: relative;
-    border-bottom: 1px solid #eee !important;
+    border-bottom: 1px solid var(--color-border-light) !important;
 }
 
 .join-bracket {
@@ -186,28 +319,28 @@ td .subnet-name.unnamed {
 .join-top {
     top: 50%;
     bottom: 0;
-    border-left: 3px solid #bbb;
-    border-top: 3px solid #bbb;
+    border-left: 3px solid var(--color-join);
+    border-top: 3px solid var(--color-join);
     border-top-left-radius: 4px;
 }
 
 .join-mid {
     top: 0;
     bottom: 0;
-    border-left: 3px solid #bbb;
+    border-left: 3px solid var(--color-join);
 }
 
 .join-bottom {
     top: 0;
     bottom: 50%;
-    border-left: 3px solid #bbb;
-    border-bottom: 3px solid #bbb;
+    border-left: 3px solid var(--color-join);
+    border-bottom: 3px solid var(--color-join);
     border-bottom-left-radius: 4px;
 }
 
 .join-clickable {
     cursor: pointer;
-    border-color: #0078d4 !important;
+    border-color: var(--color-accent) !important;
 }
 
 .join-clickable:hover {
@@ -233,7 +366,7 @@ td.name-cell {
 }
 
 td.name-cell:hover {
-    background: #e8f0fe;
+    background: var(--bg-name-hover);
 }
 
 /* Warning badges */
@@ -257,8 +390,8 @@ td.name-cell:hover {
 
 /* Summary */
 #summary {
-    background: #fff;
-    border: 1px solid #ddd;
+    background: var(--bg-card);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 20px;
@@ -278,14 +411,14 @@ td.name-cell:hover {
 
 #summaryContent .stat-label {
     font-weight: 600;
-    color: #666;
+    color: var(--color-text-muted);
     font-size: 0.8rem;
 }
 
 #summaryContent .stat-value {
     font-size: 1.2rem;
     font-weight: 700;
-    color: #0078d4;
+    color: var(--color-accent);
 }
 
 /* Modal */
@@ -300,16 +433,16 @@ td.name-cell:hover {
 }
 
 .modal-content {
-    background: #fff;
+    background: var(--bg-card);
     border-radius: 8px;
     padding: 24px;
     min-width: 360px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 32px var(--shadow-modal);
 }
 
 .modal-content h3 {
     margin-bottom: 16px;
-    color: #0078d4;
+    color: var(--color-accent);
 }
 
 .modal-content label {
@@ -323,9 +456,11 @@ td.name-cell:hover {
     width: 100%;
     margin-top: 4px;
     padding: 6px 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-input-border);
     border-radius: 4px;
     font-size: 0.95rem;
+    background: var(--bg-page);
+    color: var(--color-text);
 }
 
 .modal-actions {
@@ -336,8 +471,8 @@ td.name-cell:hover {
 }
 
 .modal-actions button:last-child {
-    background: #999;
-    border-color: #999;
+    background: #64748b;
+    border-color: #64748b;
 }
 
 /* Help Section */
@@ -346,8 +481,8 @@ td.name-cell:hover {
 }
 
 #helpSection details {
-    background: #fff;
-    border: 1px solid #ddd;
+    background: var(--bg-card);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     overflow: hidden;
 }
@@ -357,23 +492,25 @@ td.name-cell:hover {
     font-weight: 600;
     font-size: 0.95rem;
     cursor: pointer;
-    color: #0078d4;
-    background: #f9f9f9;
-    border-bottom: 1px solid #eee;
+    color: var(--color-accent);
+    background: var(--color-help-summary-bg);
+    border-bottom: 1px solid var(--color-border-light);
 }
 
 #helpSection summary:hover {
-    background: #eef5fd;
+    background: var(--color-help-summary-hover);
 }
 
 .help-content {
     padding: 16px 20px;
     font-size: 0.9rem;
     line-height: 1.6;
+    color: var(--color-text);
+    background: var(--bg-card);
 }
 
 .help-content h3 {
-    color: #0078d4;
+    color: var(--color-accent);
     margin: 16px 0 8px 0;
     font-size: 1rem;
 }
@@ -391,28 +528,29 @@ td.name-cell:hover {
 }
 
 .help-content code {
-    background: #f0f0f0;
+    background: var(--bg-code);
+    color: var(--color-text);
     padding: 1px 5px;
     border-radius: 3px;
     font-size: 0.88rem;
 }
 
 .help-content a {
-    color: #0078d4;
+    color: var(--color-accent);
 }
 
 /* Footer */
 footer {
     text-align: center;
-    color: #888;
+    color: var(--color-text-footer);
     font-size: 0.82rem;
     margin-top: 30px;
     padding-top: 20px;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid var(--color-border);
 }
 
 footer a {
-    color: #0078d4;
+    color: var(--color-accent);
 }
 
 footer p {
@@ -442,13 +580,13 @@ footer p {
 
 /* Overlap warnings */
 .overlap-box {
-    background: #fff4ce;
-    border: 1px solid #e8c700;
+    background: var(--color-overlap-bg);
+    border: 1px solid var(--color-overlap-border);
     border-radius: 8px;
     padding: 12px 16px;
     margin-bottom: 16px;
     font-size: 0.85rem;
-    color: #6b5800;
+    color: var(--color-overlap-text);
 }
 
 .overlap-box ul {
@@ -514,10 +652,10 @@ footer p {
     justify-content: center;
     width: 100%;
     height: 50px;
-    color: #999;
+    color: var(--color-text-muted);
     font-style: italic;
     font-size: 0.9rem;
-    background: #f0f0f0;
+    background: var(--bg-empty-bar);
 }
 
 /* Empty state inside the table */
@@ -537,13 +675,13 @@ footer p {
 .empty-state-title {
     font-size: 1.2rem;
     font-weight: 700;
-    color: #333;
+    color: var(--color-empty-state-title);
     margin: 0 0 8px;
 }
 
 .empty-state-hint {
     font-size: 0.9rem;
-    color: #666;
+    color: var(--color-empty-state-hint);
     margin: 0 0 24px;
     max-width: 400px;
 }
@@ -557,10 +695,10 @@ footer p {
 
 .empty-btn {
     padding: 10px 20px;
-    border: 2px solid #0078d4;
+    border: 2px solid var(--color-accent);
     border-radius: 6px;
-    background: #fff;
-    color: #0078d4;
+    background: var(--bg-empty-btn);
+    color: var(--color-accent);
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
@@ -568,11 +706,11 @@ footer p {
 }
 
 .empty-btn:hover {
-    background: #e6f3fb;
+    background: var(--bg-hover-row);
 }
 
 .empty-btn.primary {
-    background: #0078d4;
+    background: var(--color-accent);
     color: #fff;
 }
 
@@ -583,8 +721,8 @@ footer p {
 
 /* Platform table */
 #platformTable {
-    background: #fff;
-    border: 1px solid #ddd;
+    background: var(--bg-card);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     overflow-x: auto;
     margin-bottom: 20px;
@@ -601,7 +739,7 @@ footer p {
 .expand-arrow {
     cursor: pointer;
     font-size: 0.85rem;
-    color: #0078d4;
+    color: var(--color-accent);
     user-select: none;
 }
 
@@ -611,18 +749,18 @@ footer p {
 
 /* VNet rows */
 .vnet-row {
-    background: #e8f4fd;
+    background: var(--bg-vnet-row);
     font-weight: 600;
 }
 
 .vnet-row td {
-    border-bottom: 2px solid #0078d4 !important;
+    border-bottom: 2px solid var(--color-accent) !important;
     padding-top: 10px !important;
     padding-bottom: 10px !important;
 }
 
 .vnet-name-cell {
-    color: #0078d4;
+    color: var(--color-vnet-name);
     font-size: 0.95rem;
 }
 
@@ -638,8 +776,8 @@ footer p {
     height: 14px;
     border-radius: 3px;
     overflow: hidden;
-    background: #eee;
-    border: 1px solid #ccc;
+    background: var(--color-util-bar-bg);
+    border: 1px solid var(--color-util-bar-border);
 }
 
 .util-seg {
@@ -655,10 +793,10 @@ footer p {
 .util-free {
     background: repeating-linear-gradient(
         -45deg,
-        #e8e8e8,
-        #e8e8e8 3px,
-        #f5f5f5 3px,
-        #f5f5f5 6px
+        var(--color-util-bar-bg),
+        var(--color-util-bar-bg) 3px,
+        var(--bg-page) 3px,
+        var(--bg-page) 6px
     );
 }
 
@@ -666,25 +804,25 @@ footer p {
     display: block;
     font-size: 0.7rem;
     font-weight: 400;
-    color: #666;
+    color: var(--color-util-label);
     margin-top: 2px;
     text-align: center;
 }
 
 .vnet-row .util-label {
     font-weight: 600;
-    color: #333;
+    color: var(--color-util-label-vnet);
 }
 
 /* Subnet rows */
 .subnet-row td {
-    background: #fff;
+    background: var(--bg-card);
 }
 
 .subnet-indent {
-    border-left: 3px solid #ddd;
+    border-left: 3px solid var(--color-subnet-indent);
 }
 
 .subnet-row:hover td {
-    background: #f6faff;
+    background: var(--bg-hover-row);
 }

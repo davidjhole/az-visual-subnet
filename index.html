@@ -7,6 +7,12 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <label class="theme-toggle" title="Toggle dark/light mode">
+        <input type="checkbox" id="themeToggle" onchange="applyTheme(this.checked)">
+        <span class="theme-toggle-track"><span class="theme-toggle-thumb"></span></span>
+        <span id="themeLabel">☀️ Light</span>
+    </label>
+
     <header>
         <h1>&#x1F537; AZ Network Designer</h1>
         <p class="subtitle">Design and visualise an entire Azure platform network — multiple VNets, subnets, and address spaces.</p>
@@ -14,7 +20,7 @@
 
     <section id="config">
         <div class="config-row">
-            <label>Platform Address Space:
+            <label>Address Space:
                 <input type="text" id="addressSpaceInput" placeholder="e.g. 10.0.0.0/16" style="width:160px" onchange="platform.setAddressSpace(this.value)">
             </label>
             <span id="rebaseHint" class="rebase-hint" style="display:none">&#x26A0;&#xFE0F; Changing this will rebase all VNet addresses</span>
@@ -135,5 +141,19 @@
 
     <script src="azureDefaults.js"></script>
     <script src="app.js"></script>
+    <script>
+        function applyTheme(isDark) {
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            document.getElementById('themeLabel').textContent = isDark ? '🌙 Dark' : '☀️ Light';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+        (function () {
+            var saved = localStorage.getItem('theme');
+            var isDark = saved ? saved === 'dark' : true; // default dark
+            var toggle = document.getElementById('themeToggle');
+            toggle.checked = isDark;
+            applyTheme(isDark);
+        })();
+    </script>
 </body>
 </html>

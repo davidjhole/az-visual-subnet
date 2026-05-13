@@ -507,7 +507,7 @@ const platform = (function () {
             var totalVnetIPs = vnets.reduce(function (s, v) { return s + parseCidr(v.cidr).totalIPs; }, 0);
             var freeIPs = asp.totalIPs - totalVnetIPs;
             var allocPct = asp.totalIPs > 0 ? Math.round((totalVnetIPs / asp.totalIPs) * 100) : 0;
-            md += '**Platform Address Space:** ' + addressSpace + ' (' + asp.totalIPs.toLocaleString() + ' IPs)  \n';
+            md += '**Address Space:** ' + addressSpace + ' (' + asp.totalIPs.toLocaleString() + ' IPs)  \n';
             md += '**VNet Allocated:** ' + totalVnetIPs.toLocaleString() + ' IPs (' + allocPct + '%) | **Free:** ' + freeIPs.toLocaleString() + ' IPs\n\n';
         }
         vnets.forEach(function (v) {
@@ -548,7 +548,7 @@ const platform = (function () {
             var totalVnetIPs = vnets.reduce(function (s, v) { return s + parseCidr(v.cidr).totalIPs; }, 0);
             var freeIPs = asp.totalIPs - totalVnetIPs;
             var allocPct = asp.totalIPs > 0 ? Math.round((totalVnetIPs / asp.totalIPs) * 100) : 0;
-            html += '<p style="font-family:Calibri,Arial,sans-serif;font-size:10pt;"><strong>Platform Address Space:</strong> ' + addressSpace + ' (' + asp.totalIPs.toLocaleString() + ' IPs)<br>';
+            html += '<p style="font-family:Calibri,Arial,sans-serif;font-size:10pt;"><strong>Address Space:</strong> ' + addressSpace + ' (' + asp.totalIPs.toLocaleString() + ' IPs)<br>';
             html += '<strong>VNet Allocated:</strong> ' + totalVnetIPs.toLocaleString() + ' IPs (' + allocPct + '%) | <strong>Free:</strong> ' + freeIPs.toLocaleString() + ' IPs</p>';
         }
 
@@ -696,7 +696,7 @@ const platform = (function () {
 
         if (!addressSpace) {
             if (vnets.length === 0) {
-                bar.innerHTML = '<div class="empty-bar">Set a platform address space and add VNets to start</div>';
+                bar.innerHTML = '<div class="empty-bar">Set an address space and add VNets to start</div>';
             } else {
                 // No supernet — just show equal-sized VNet blocks
                 vnets.forEach(function (v, vIdx) {
