@@ -669,6 +669,9 @@ const platform = (function () {
         renderTable();
         renderSummary();
         saveToLocalStorage();
+        // Auto-expand help when there's nothing to show
+        var helpDetails = document.querySelector('#helpSection details');
+        if (helpDetails) helpDetails.open = (vnets.length === 0);
     }
 
     function renderOverlaps() {

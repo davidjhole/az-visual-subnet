@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Azure Platform Network Designer</title>
+    <title>AZ Network Designer</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>&#x1F537; Azure Platform Network Designer</h1>
+        <h1>&#x1F537; AZ Network Designer</h1>
         <p class="subtitle">Design and visualise an entire Azure platform network — multiple VNets, subnets, and address spaces.</p>
     </header>
 
@@ -80,9 +80,6 @@
             <label>Region:
                 <input type="text" id="modalVnetRegion" placeholder="e.g. uksouth">
             </label>
-            <label>Subscription / Context:
-                <input type="text" id="modalVnetSubscription" placeholder="e.g. Connectivity">
-            </label>
             <div class="modal-actions">
                 <button onclick="platform.saveVnetModal()">Save</button>
                 <button onclick="platform.closeVnetModal()">Cancel</button>
@@ -108,6 +105,14 @@
         <details>
             <summary>&#x2753; Help &amp; Troubleshooting</summary>
             <div class="help-content">
+                <h3>&#x1F4E5; Importing from a live Azure environment</h3>
+                <p>Use the <a href="export-azure.ps1" download><code>export-azure.ps1</code></a> PowerShell script to export your existing Azure VNets and subnets into a JSON file compatible with this tool.</p>
+                <ol>
+                    <li>Ensure you are logged in via <code>az login</code> (Azure CLI) or <code>Connect-AzAccount</code> (Az PowerShell)</li>
+                    <li>Run: <code>.\export-azure.ps1</code> (optionally pass <code>-SubscriptionId</code> or <code>-ResourceGroup</code> to filter)</li>
+                    <li>The script outputs a JSON file — click <strong>Import JSON</strong> above to load it</li>
+                </ol>
+
                 <h3>&#x1F4C4; Copy for Word — pasting as plain text?</h3>
                 <p>If the table pastes into Word as plain text instead of a formatted table, check your Word paste settings:</p>
                 <ol>
@@ -117,14 +122,6 @@
                     <li>Click OK and try pasting again</li>
                 </ol>
                 <p><strong>Quick fix:</strong> In Word, right-click where you want to paste and choose the <em>"Keep Source Formatting"</em> paste option (clipboard icon with paintbrush), or use <strong>Paste Special &rarr; HTML Format</strong>.</p>
-
-                <h3>&#x1F4E5; Importing from a live Azure environment</h3>
-                <p>Use the <a href="export-azure.ps1" download><code>export-azure.ps1</code></a> PowerShell script to export your existing Azure VNets and subnets into a JSON file compatible with this tool.</p>
-                <ol>
-                    <li>Ensure you are logged in via <code>az login</code> (Azure CLI) or <code>Connect-AzAccount</code> (Az PowerShell)</li>
-                    <li>Run: <code>.\export-azure.ps1</code> (optionally pass <code>-SubscriptionId</code> or <code>-ResourceGroup</code> to filter)</li>
-                    <li>The script outputs a JSON file — click <strong>Import JSON</strong> above to load it</li>
-                </ol>
             </div>
         </details>
     </section>
