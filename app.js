@@ -818,77 +818,74 @@ const platform = (function () {
     function loadExample() {
         pushUndo();
         var example = {
-            addressSpace: '10.0.0.0/8',
+            addressSpace: '10.0.0.0/16',
             vnets: [
                 {
                     name: 'vnet-connectivity-uksouth',
-                    cidr: '10.0.0.0/22',
+                    cidr: '10.0.0.0/23',
                     region: 'uksouth',
                     subscriptionName: 'Connectivity',
                     subnets: [
-                        { name: 'AzureFirewallSubnet',          cidr: '10.0.0.0/26'  },
-                        { name: 'AzureFirewallManagementSubnet',cidr: '10.0.0.64/26' },
-                        { name: 'GatewaySubnet',                cidr: '10.0.0.128/27' },
-                        { name: 'AzureBastionSubnet',           cidr: '10.0.0.160/26' },
-                        { name: 'snet-dns-resolver-inbound',    cidr: '10.0.0.224/28' },
-                        { name: 'snet-dns-resolver-outbound',   cidr: '10.0.0.240/28' },
-                        { name: 'snet-network-management',      cidr: '10.0.1.0/24'  },
-                        { name: 'snet-private-endpoints',       cidr: '10.0.2.0/24'  }
+                        { name: 'AzureFirewallSubnet',           cidr: '10.0.0.0/26'   },
+                        { name: 'AzureFirewallManagementSubnet', cidr: '10.0.0.64/26'  },
+                        { name: 'GatewaySubnet',                 cidr: '10.0.0.128/27' },
+                        { name: 'AzureBastionSubnet',            cidr: '10.0.0.160/26' },
+                        { name: 'snet-dns-resolver-inbound',     cidr: '10.0.0.224/28' },
+                        { name: 'snet-dns-resolver-outbound',    cidr: '10.0.0.240/28' }
                     ]
                 },
                 {
                     name: 'vnet-identity-uksouth',
-                    cidr: '10.1.0.0/24',
+                    cidr: '10.0.2.0/24',
                     region: 'uksouth',
                     subscriptionName: 'Identity',
                     subnets: [
-                        { name: 'snet-domain-controllers', cidr: '10.1.0.0/27' },
-                        { name: 'snet-private-endpoints',  cidr: '10.1.0.32/27' }
+                        { name: 'snet-domain-controllers', cidr: '10.0.2.0/27'  },
+                        { name: 'snet-private-endpoints',  cidr: '10.0.2.32/27' }
                     ]
                 },
                 {
                     name: 'vnet-management-uksouth',
-                    cidr: '10.2.0.0/24',
+                    cidr: '10.0.3.0/24',
                     region: 'uksouth',
                     subscriptionName: 'Management',
                     subnets: [
-                        { name: 'snet-monitoring',         cidr: '10.2.0.0/26'  },
-                        { name: 'snet-automation',         cidr: '10.2.0.64/26' },
-                        { name: 'snet-private-endpoints',  cidr: '10.2.0.128/26' }
+                        { name: 'snet-monitoring',        cidr: '10.0.3.0/26'   },
+                        { name: 'snet-automation',        cidr: '10.0.3.64/26'  },
+                        { name: 'snet-private-endpoints', cidr: '10.0.3.128/26' }
                     ]
                 },
                 {
                     name: 'vnet-alz-corp-01-uksouth',
-                    cidr: '10.10.0.0/22',
+                    cidr: '10.0.6.0/24',
                     region: 'uksouth',
                     subscriptionName: 'Corp Landing Zone 01',
                     subnets: [
-                        { name: 'snet-app-frontend',      cidr: '10.10.0.0/25'  },
-                        { name: 'snet-app-backend',       cidr: '10.10.0.128/25' },
-                        { name: 'snet-data',              cidr: '10.10.1.0/25'  },
-                        { name: 'snet-private-endpoints', cidr: '10.10.1.128/25' }
+                        { name: 'snet-app-frontend',      cidr: '10.0.6.0/26'   },
+                        { name: 'snet-app-backend',       cidr: '10.0.6.64/26'  },
+                        { name: 'snet-data',              cidr: '10.0.6.128/26' },
+                        { name: 'snet-private-endpoints', cidr: '10.0.6.192/26' }
                     ]
                 },
                 {
                     name: 'vnet-alz-corp-02-uksouth',
-                    cidr: '10.10.4.0/22',
+                    cidr: '10.0.7.0/24',
                     region: 'uksouth',
                     subscriptionName: 'Corp Landing Zone 02',
                     subnets: [
-                        { name: 'snet-app-frontend',      cidr: '10.10.4.0/25'  },
-                        { name: 'snet-app-backend',       cidr: '10.10.4.128/25' },
-                        { name: 'snet-private-endpoints', cidr: '10.10.5.0/24'  }
+                        { name: 'snet-app-frontend', cidr: '10.0.7.0/26'  },
+                        { name: 'snet-app-backend',  cidr: '10.0.7.64/26' }
                     ]
                 },
                 {
                     name: 'vnet-alz-online-01-uksouth',
-                    cidr: '10.20.0.0/22',
+                    cidr: '10.0.8.0/24',
                     region: 'uksouth',
                     subscriptionName: 'Online Landing Zone 01',
                     subnets: [
-                        { name: 'snet-app-gateway',        cidr: '10.20.0.0/25'  },
-                        { name: 'snet-app-services',       cidr: '10.20.0.128/25' },
-                        { name: 'snet-private-endpoints',  cidr: '10.20.1.0/25'  }
+                        { name: 'snet-app-gateway',       cidr: '10.0.8.0/27'  },
+                        { name: 'snet-app-services',      cidr: '10.0.8.32/27' },
+                        { name: 'snet-private-endpoints', cidr: '10.0.8.64/27' }
                     ]
                 }
             ]
