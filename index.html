@@ -17,6 +17,9 @@
             <label>Platform Address Space:
                 <input type="text" id="addressSpaceInput" placeholder="e.g. 10.0.0.0/16" style="width:160px" onchange="platform.setAddressSpace(this.value)">
             </label>
+            <span id="rebaseHint" class="rebase-hint" style="display:none">&#x26A0;&#xFE0F; Changing this will rebase all VNet addresses</span>
+        </div>
+        <div class="config-row config-row-buttons">
             <button onclick="platform.addVnet()">&#x2795; Add VNet</button>
             <button onclick="platform.importJSON()">&#x1F4E5; Import JSON</button>
             <button onclick="platform.exportJSON()">&#x1F4E4; Export JSON</button>

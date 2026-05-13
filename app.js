@@ -672,6 +672,9 @@ const platform = (function () {
         // Auto-expand help when there's nothing to show
         var helpDetails = document.querySelector('#helpSection details');
         if (helpDetails) helpDetails.open = (vnets.length === 0);
+        // Show rebase warning badge only when there are VNets to rebase
+        var rebaseHint = document.getElementById('rebaseHint');
+        if (rebaseHint) rebaseHint.style.display = (vnets.length > 0 && addressSpace) ? 'inline-block' : 'none';
     }
 
     function renderOverlaps() {

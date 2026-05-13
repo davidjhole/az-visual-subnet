@@ -47,6 +47,21 @@ header .subtitle {
     flex-wrap: wrap;
 }
 
+.config-row-buttons {
+    flex-wrap: nowrap;
+}
+
+.rebase-hint {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #8a6000;
+    background: #fff8e1;
+    border: 1px solid #f0c040;
+    border-radius: 4px;
+    padding: 3px 10px;
+    white-space: nowrap;
+}
+
 .config-row:last-child {
     margin-bottom: 0;
 }
